@@ -1,72 +1,70 @@
 const log = console.log;
 
 let video_list = [
-    {"NOTI_TIT" : "title1", "WRITE_DATE" : "2022.11.09"}
-    ,{"NOTI_TIT" : "title2", "WRITE_DATE" : "2022.11.10"}
-    ,{"NOTI_TIT" : "title3", "WRITE_DATE" : "2022.11.11"}
-    ,{"NOTI_TIT" : "title4", "WRITE_DATE" : "2022.11.13"}
-]
+     {"TITLE" : "[디자인 패턴] 자바의 싱글톤 패턴 (static)", "WRITE_DATE" : "2022.11.09"}
+    ,{"TITLE" : "[Spring Security] GET 로그아웃 처리", "WRITE_DATE" : "2022.11.10"}
+    ,{"TITLE" : "[JAVA 8] 분할 가능한 Itortater인 Spliterator 인터페이스", "WRITE_DATE" : "2022.11.11"}
+    ,{"TITLE" : "[Spring Security] 스프링 시큐리티를 이용하여 로그인, 회원가입 구현하기", "WRITE_DATE" : "2022.11.13"}
+    ,{"TITLE" : "[Spring Security] 유저별 권한 설정", "WRITE_DATE" : "2022.11.13"}
+    ,{"TITLE" : "[Spring Security] 동시 로그인 제한하기(동시 세션 제어)", "WRITE_DATE" : "2022.11.13"}
+    ,{"TITLE" : "[thymeleaf] < > 이스케이프(escape) 해제 (그대로 출력)", "WRITE_DATE" : "2022.11.13"}
+    ,{"TITLE" : "[MQ] rabbitMQ", "WRITE_DATE" : "2022.11.13"}
+    ,{"TITLE" : "[디자인패턴] PRG (Post -> Redirect -> Get) pattern 이란?", "WRITE_DATE" : "2022.11.13"}
+    ,{"TITLE" : "[DB] RDB와 NoSQL 차이", "WRITE_DATE" : "2022.11.13"}
+    ,{"TITLE" : "[OS] 멀티 프로세스(multi process)와 멀티 스레드(multi thread)", "WRITE_DATE" : "2022.11.13"}
+];
 
 const totalCount = video_list.length;
 //총 페이지
 const totalPage = Math.ceil(totalCount / 10.0);
 
-$(document).ready(function(){
-    console.log("????");
-
+document.addEventListener('DOMContentLoaded', () => {
     video_list = video_list.reverse();
-
     // 페이지 세팅
     setPageHtml();
     // 데이터 세팅
     setList();
-
-});
+})
 
 function setPageHtml(){
 
-    let pageHtml =  '<ul>';
-    pageHtml +=  '<li class="first">';
-    pageHtml +=		'<a href="#;" onClick="changePage('+"'first'"+');return false;">';
-    pageHtml +=			'처음';
-    pageHtml +=		'</a>';
-    pageHtml +=	'</li>';
-    pageHtml +=	'<li class="prev" onClick="changePage('+"'prev'"+');return false;">';
-    pageHtml +=		'<a href="#;" >';
-    pageHtml +=			'이전';
-    pageHtml +=		'</a>';
-    pageHtml +=	'</li>';
-    pageHtml +=	'<li class="on">';
-    pageHtml +=		'<a href="#;" onClick="changePage('+"'1'"+');return false;">1</a>';
-    pageHtml +=	'</li>';
+    let pageHtml =
+       `<li class="page-item">
+            <a href="#;" class="page-link" onClick="changePage('first');return false;">First</a>
+        </li>
+        <li class="page-item">
+            <a href="#" class="page-link" onClick="changePage('prev');return false;">Prev</a>
+        </li>
+        <li class="page-item active">
+            <a href="#;" class="page-link" onClick="changePage(1);return false;">1</a>
+        </li>`;
 
     for(let i = 2; i <= totalPage; i ++){
-        pageHtml += '<li>';
-        pageHtml +=		'<a href="#;" onClick="changePage("'+i+'");return false;">' + i + '</a>';
-        pageHtml +=	'</li>';
+        pageHtml +=
+            `<li class="page-item">
+               <a href="#;" class="page-link" onClick="changePage(${i});return false;">${i}</a>
+             </li>`;
     }
 
-    pageHtml += '<li class="next">';
-    pageHtml +=		'<a href="#;" onClick="changePage('+"'next'"+');return false;">';
-    pageHtml +=			'다음';
-    pageHtml +=		'</a>';
-    pageHtml +=	'</li>';
-    pageHtml +=	'<li class="last" onClick="changePage('+"'last'"+');return false;">';
-    pageHtml +=		'<a href="#;" >';
-    pageHtml +=			'마지막';
-    pageHtml +=		'</a>';
-    pageHtml +=	'</li>';
-    pageHtml +='</ul>';
+    pageHtml +=
+       `<li class="page-item">
+            <a href="#;" class="page-link" onClick="changePage('next');return false;">Next</a>
+        </li>
+        <li class="page-item">
+            <a href="#;" class="page-link" onClick="changePage('last');return false;">Last</a>
+        </li>`;
 
-    $("#paging").empty();
-    $("#paging").append(pageHtml);
+    document.getElementById("paging").innerHTML = pageHtml;
 
 }
 
-
+/**
+ * 페이지 세팅
+ * @param page
+ */
 function setList(page){
 
-    // 페이지당 표시 될 튜플 수
+    // 페이지 당 표시 될 튜플 수
     let pageCount = 10;
     page = page == null ? "1" : page;
 
@@ -79,15 +77,23 @@ function setList(page){
 
     showList(startPage, endPage);
 
-    $("#page_info").html(+ page + "/" + totalPage + "쪽 [총 <strong>" + totalCount + "</strong>건]");
+    let html = `${page}/${totalPage} 쪽 [총 <strong>${totalCount}</strong>건]`;
+    document.getElementById("page_info").innerHTML = html;
 
-    $("#paging ul li").removeClass("on");
-    $("#paging ul li:contains("+page+")").addClass("on");
+    // 변경된 페이지 표시
+    document.querySelectorAll("#paging li").forEach( (item) => {
+        let str = item.querySelector("#paging li a").innerText;
+        if(str.includes(page)) {
+            item.classList.add("active");
+        }else{
+            item.classList.remove("active");
+        }
+    });
 
 }
 
 /**
- * 게시판 세팅
+ * 해당 페이지 데이터 세팅
  * @param startPage
  * @param endPage
  */
@@ -97,14 +103,14 @@ function showList(startPage, endPage){
 
     for(let i = (startPage - 1) ; i < endPage; i++) {
 
-        let title = video_list[i].NOTI_TIT;
+        let title = video_list[i].TITLE;
         let writeDt = video_list[i].WRITE_DATE;
 
         html += `<tr className="alert" role="alert">
-							<th scope="row">${totalCount - i}</th>
-							<td>${title}</td>
-							<td>${writeDt}</td>
-						 </tr>`
+                    <th scope="row">${totalCount - i}</th>
+                    <td>${title}</td>
+                    <td>${writeDt}</td>
+                  </tr>`;
 
     }
 
@@ -118,8 +124,11 @@ function showList(startPage, endPage){
  * @returns
  */
 function changePage(page){
+    log("page ==> " + page);
 
-    let nowPage = parseInt($("#paging ul .on a").text());
+    // 현재 페이지
+    let nowPage = parseInt(document.querySelector("#paging .active a").innerText);
+    log("nowPage --> " + nowPage);
 
     if(page === "first"){
         page = "1";

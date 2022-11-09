@@ -5,7 +5,8 @@
   <head>
   	<title>jspBoard</title>
     <meta charset="utf-8">
-	<script src="../../resources/js/paging.js"></script>
+	<script type = "text/javascript" src="/resources/js/paging.js"></script>
+	<link href="/resources/css/style.css" rel="stylesheet">
   </head>
 
   <body>
@@ -13,13 +14,15 @@
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-md-6 text-center mb-5">
-					<h2 class="heading-section">Table</h2>
+					<h2 class="heading-section">zhfvkq table</h2>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
+					<!-- page count -->
+					<div id="page_info"></div>
+					<!-- board -->
 					<div class="table-wrap">
-						<div id="page_info"></div>
 						<table class="table">
 						  <thead class="thead-dark">
 						    <tr>
@@ -28,12 +31,14 @@
 						      <th>date</th>
 						    </tr>
 						  </thead>
-						  <tbody>
-							  <div id="html_list">
-							  </div>
+						  <tbody id="html_list">
 						  </tbody>
 						</table>
-						<div id="paging"></div>
+						<!-- pagination -->
+						<nav aria-label="Page navigation example">
+							<ul class="pagination justify-content-center" id="paging">
+							</ul>
+						</nav>
 					</div>
 				</div>
 			</div>
